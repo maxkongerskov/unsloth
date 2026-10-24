@@ -421,8 +421,12 @@ export const BUDGET = {
   // strings) add 3,354 B raw / 844 B transfer to the same chunks (6,934,369 -> 6,937,723 B raw, 2,089,100 ->
   // 2,089,944 B transfer against 395e5b2ad, one machine and build, Node 22.23.4, unchanged at 99 chunks).
   // Raised by that growth, for the same reason as the card above.
-  transferBytes: 2_090_012,
-  rawBytes: 6_937_873,
+  // The Codex model list (several models in Codex's own picker, add/remove chips and its strings) adds
+  // 402 B raw / 115 B transfer to the same chunks (6,937,723 -> 6,938,125 B raw, 2,089,927 -> 2,090,042 B
+  // transfer against a0b51beda, one machine and build, Node 22.23.4, unchanged at 99 chunks). Raised by
+  // that growth, for the same reason as the card above.
+  transferBytes: 2_090_127,
+  rawBytes: 6_938_275,
 };
 
 // The chunk count is reported but not budgeted. Splitting a page out of the entry raises it while lowering the
