@@ -428,8 +428,13 @@ export const BUDGET = {
   // 402 B raw / 115 B transfer to the same chunks (6,937,723 -> 6,938,125 B raw, 2,089,927 -> 2,090,042 B
   // transfer against a0b51beda, one machine and build, Node 22.23.4, unchanged at 99 chunks). Raised by
   // that growth, for the same reason as the card above.
-  transferBytes: 2_090_180,
-  rawBytes: 6_938_413,
+  // The Agents run settings (context window, MTP and keep-loaded controls and their strings) and the gateways'
+  // small-context message bring the whole Desktop apps change to +8,094 B raw / +2,421 B transfer over main
+  // (6,926,367 -> 6,934,461 B raw, 2,082,769 -> 2,085,190 B transfer against 98c1fdc864, one machine and build,
+  // Node 26.8.2, unchanged at 99 chunks), 2,790 B raw / 942 B transfer more than the three entries above.
+  // Raised by the measured total over main's budget, so main's margin stays where it was.
+  transferBytes: 2_091_122,
+  rawBytes: 6_941_203,
 };
 
 // The chunk count is reported but not budgeted. Splitting a page out of the entry raises it while lowering the
