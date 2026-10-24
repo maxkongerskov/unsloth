@@ -43,6 +43,8 @@ def studio(tmp_path, monkeypatch):
     monkeypatch.setenv("LOCALAPPDATA", str(home / "AppData" / "Local"))
     monkeypatch.delenv("CODEX_HOME", raising = False)
     monkeypatch.delenv("UNSLOTH_API_KEY", raising = False)
+    # Claude Desktop's profile follows the account's home, not $HOME; keep it in tmp_path too.
+    monkeypatch.setattr(start._claude_desktop, "user_home", lambda: home)
     server = {"calls": [], "keys": {CLI_KEY, APP_KEY}, "minted": 0}
 
     def http_json(
