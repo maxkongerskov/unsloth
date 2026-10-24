@@ -2,7 +2,7 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `40d70f4d7a`, rebased on upstream `main`).
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `939f976149`, rebased on upstream `main`).
 
 **Upstream PR:** [unslothai/unsloth#15155](https://github.com/unslothai/unsloth/pull/15155) is open. It contains only the feature code, tests and strings, not the DMG or the scripts. This fork, and its test build, exist only until that PR is merged. After that, use the official Unsloth Studio.
 
