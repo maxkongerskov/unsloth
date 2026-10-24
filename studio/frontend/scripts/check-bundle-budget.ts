@@ -420,8 +420,12 @@ export const BUDGET = {
   // 2,089,100 B transfer against 5cc3f43d73, one machine and build, Node 22.23.4, unchanged at 99 chunks).
   // Lazy-loading the card cost more (+2.4 KB transfer) and 7 extra startup chunks, so it is imported
   // statically and the budget raised by that growth.
-  transferBytes: 2_089_221,
-  rawBytes: 6_934_657,
+  // The Codex Desktop card and the Claude Desktop model selector (shared model picker, API clients and
+  // strings) add 3,354 B raw / 844 B transfer to the same chunks (6,934,369 -> 6,937,723 B raw, 2,089,100 ->
+  // 2,089,944 B transfer against 395e5b2ad, one machine and build, Node 22.23.4, unchanged at 99 chunks).
+  // Raised by that growth, for the same reason as the card above.
+  transferBytes: 2_090_065,
+  rawBytes: 6_938_011,
 };
 
 // The chunk count is reported but not budgeted. Splitting a page out of the entry raises it while lowering the
