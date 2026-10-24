@@ -24,8 +24,8 @@ Settings → Agents → Desktop apps:
 - **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
 
 ## Download
-Unofficial test build, built from `40c7c55`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
-**[Unsloth-Studio-claude-codex-desktop-40c7c55.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-23c4b28/Unsloth-Studio-claude-codex-desktop-40c7c55.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-23c4b28).
+Unofficial test build, built from `d898b62`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
+**[Unsloth-Studio-claude-codex-desktop-d898b62.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-d898b62/Unsloth-Studio-claude-codex-desktop-d898b62.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-d898b62).
 
 The DMG holds the app plus the matching Studio backend and two scripts. The desktop app runs the backend installed under `~/.unsloth/studio`; the install script puts this branch's backend there, so Claude Desktop, Codex Desktop and the Agents run settings work.
 
