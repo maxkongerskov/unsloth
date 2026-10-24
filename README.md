@@ -1,3 +1,44 @@
+# Unsloth Studio + Claude Desktop / Codex Desktop (unofficial fork)
+
+> **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
+
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) and is proposed upstream as a pull request.
+
+## What it adds
+- **Claude Desktop:** Settings → Agents → Connect points Claude Desktop at the model loaded in Studio through a local gateway. Disconnecting, or quitting Studio, puts Claude's own configuration back.
+- **Codex Desktop:** the same switch for the Codex desktop app.
+- **Synced run settings in the Agents panel:** a context window slider, keep-loaded (idle unload) and an MTP / speculative decoding toggle. Each one is the existing Studio setting (Run settings → Context Length with Remember, Model auto-switch → Unload after idle, Run settings → Speculative), synced live in both directions.
+  - The slider's range is the model's trained context.
+  - On Apple Silicon the Metal memory-guard limit is shown.
+- **Full context by default:** a model auto-loaded by Claude or Codex uses its full trained context, capped only by the memory guard, unless a smaller one was pinned. If it is still too small, you get a readable error.
+- **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
+
+## Download
+Unofficial test build (ad-hoc signed, not notarized):
+**[Unsloth-Studio-claude-codex-desktop-23c4b28.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-23c4b28/Unsloth-Studio-claude-codex-desktop-23c4b28.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-23c4b28).
+
+The desktop app runs the Studio backend installed under `~/.unsloth/studio`. The new Agents features also need this branch's backend; with the stock PyPI backend those panels show errors, and everything else works as usual.
+
+## Install
+1. Quit Unsloth.
+2. Optional but recommended: keep a copy of your current app, e.g. `ditto /Applications/Unsloth.app ~/Unsloth-app-backups/Unsloth-current.app`.
+3. Open the DMG and drag `Unsloth.app` onto Applications.
+4. On first launch, right-click → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
+
+Installing replaces only the app bundle. It does not touch:
+- your models, the Hugging Face cache or custom model folders;
+- `~/.unsloth` or the Studio database.
+
+## Roll back
+Quit Unsloth and put your saved copy back in `/Applications/Unsloth.app`, or reinstall the official app from [unsloth.ai](https://unsloth.ai). Models and data are unaffected either way.
+
+## License
+AGPL-3.0 for Unsloth Studio, the same as upstream; see [`studio/LICENSE.AGPL-3.0`](studio/LICENSE.AGPL-3.0) and the upstream [LICENSE](LICENSE). All credit for Unsloth goes to [Unsloth AI](https://github.com/unslothai/unsloth).
+
+---
+
+## Upstream README
+
 <h1 align="center" style="margin:0;">
   <a href="https://unsloth.ai/docs"><picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/unslothai/unsloth/main/images/unsloth%20logo%20white%20text.png">
