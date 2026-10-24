@@ -2,11 +2,21 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) and is being prepared as an upstream pull request.
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `40d70f4d7a`, rebased on upstream `main`).
+
+**Upstream PR:** [unslothai/unsloth#15155](https://github.com/unslothai/unsloth/pull/15155) is open. It contains only the feature code, tests and strings, not the DMG or the scripts. This fork, and its test build, exist only until that PR is merged. After that, use the official Unsloth Studio.
+
+## Screenshots
+Settings → Agents → Desktop apps:
+
+<img src="https://raw.githubusercontent.com/maxkongerskov/unsloth/pr-assets/docs/pr-claude-codex-desktop/claude-desktop-card.png" width="760" alt="Claude Desktop card with per-model-option dropdowns">
+
+<img src="https://raw.githubusercontent.com/maxkongerskov/unsloth/pr-assets/docs/pr-claude-codex-desktop/codex-desktop-and-run-settings.png" width="760" alt="Codex Desktop model list and the shared context, MTP and keep-loaded run settings">
 
 ## What it adds
 - **Claude Desktop:** Settings → Agents → Connect points Claude Desktop at the model loaded in Studio through a local gateway. Disconnecting, or quitting Studio, puts Claude's own configuration back.
-- **Codex Desktop:** the same switch for the Codex desktop app.
+- **Claude Desktop model slots:** an "All" dropdown and one dropdown per Claude model option (Fable 5, Opus 5, Sonnet 5, Haiku 4.5, Sonnet 4.6), each mapped to a Studio model.
+- **Codex Desktop:** the same switch for the Codex desktop app. A list of up to 5 Studio models shows in Codex's own model picker, and each loads on demand.
 - **Synced run settings in the Agents panel:** a context window slider, keep-loaded (idle unload) and an MTP / speculative decoding toggle. Each one is the existing Studio setting (Run settings → Context Length with Remember, Model auto-switch → Unload after idle, Run settings → Speculative), synced live in both directions.
   - The slider's range is the model's trained context.
   - On Apple Silicon the Metal memory-guard limit is shown.
@@ -14,7 +24,7 @@ The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Ap
 - **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
 
 ## Download
-Unofficial test build (ad-hoc signed, not notarized):
+Unofficial test build, built from `40c7c55`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
 **[Unsloth-Studio-claude-codex-desktop-40c7c55.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-23c4b28/Unsloth-Studio-claude-codex-desktop-40c7c55.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-23c4b28).
 
 The DMG holds the app plus the matching Studio backend and two scripts. The desktop app runs the backend installed under `~/.unsloth/studio`; the install script puts this branch's backend there, so Claude Desktop, Codex Desktop and the Agents run settings work.
