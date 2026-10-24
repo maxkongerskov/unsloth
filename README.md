@@ -2,7 +2,7 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) and is proposed upstream as a pull request.
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) and is being prepared as an upstream pull request.
 
 ## What it adds
 - **Claude Desktop:** Settings → Agents → Connect points Claude Desktop at the model loaded in Studio through a local gateway. Disconnecting, or quitting Studio, puts Claude's own configuration back.
@@ -15,22 +15,31 @@ The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Ap
 
 ## Download
 Unofficial test build (ad-hoc signed, not notarized):
-**[Unsloth-Studio-claude-codex-desktop-23c4b28.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-23c4b28/Unsloth-Studio-claude-codex-desktop-23c4b28.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-23c4b28).
+**[Unsloth-Studio-claude-codex-desktop-40c7c55.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-23c4b28/Unsloth-Studio-claude-codex-desktop-40c7c55.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-23c4b28).
 
-The desktop app runs the Studio backend installed under `~/.unsloth/studio`. The new Agents features also need this branch's backend; with the stock PyPI backend those panels show errors, and everything else works as usual.
+The DMG holds the app plus the matching Studio backend and two scripts. The desktop app runs the backend installed under `~/.unsloth/studio`; the install script puts this branch's backend there, so Claude Desktop, Codex Desktop and the Agents run settings work.
 
 ## Install
-1. Quit Unsloth.
-2. Optional but recommended: keep a copy of your current app, e.g. `ditto /Applications/Unsloth.app ~/Unsloth-app-backups/Unsloth-current.app`.
+1. Quit Unsloth (menu bar → Quit). This also unloads any loaded model.
+2. Optional: keep a copy of your current app, e.g. `ditto /Applications/Unsloth.app ~/Unsloth-app-backups/Unsloth-current.app`.
 3. Open the DMG and drag `Unsloth.app` onto Applications.
-4. On first launch, right-click → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
+4. Double-click **Install Claude & Codex backend.command**. It:
+   - backs up your current backend environment to `~/Unsloth-app-backups/`;
+   - installs the bundled backend wheel offline, with no dependency changes.
+5. Open Unsloth: Settings → Agents shows Claude Desktop, Codex Desktop and Run settings.
 
-Installing replaces only the app bundle. It does not touch:
-- your models, the Hugging Face cache or custom model folders;
-- `~/.unsloth` or the Studio database.
+If macOS refuses to open the app or a script, right-click it → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
+
+Nothing else is touched:
+- your models, the Hugging Face cache (including a symlinked drive) and custom model folders;
+- the Studio database, chats and settings;
+- llama.cpp.
 
 ## Roll back
-Quit Unsloth and put your saved copy back in `/Applications/Unsloth.app`, or reinstall the official app from [unsloth.ai](https://unsloth.ai). Models and data are unaffected either way.
+- **Backend:** quit Unsloth and double-click **Restore original backend.command**. It puts the backup back; the Claude/Codex environment is moved aside, not deleted.
+- **App:** put your saved copy back in `/Applications/Unsloth.app`, or reinstall the official app from [unsloth.ai](https://unsloth.ai).
+
+If Studio offers a backend update, accepting it replaces this backend with the official one. Run the install script again afterwards.
 
 ## License
 AGPL-3.0 for Unsloth Studio, the same as upstream; see [`studio/LICENSE.AGPL-3.0`](studio/LICENSE.AGPL-3.0) and the upstream [LICENSE](LICENSE). All credit for Unsloth goes to [Unsloth AI](https://github.com/unslothai/unsloth).
