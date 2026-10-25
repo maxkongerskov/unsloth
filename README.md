@@ -2,7 +2,7 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `dc90dd7a7f`, rebased on upstream `main`).
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `9321f1e2a0`, merged with upstream `main`).
 
 **Upstream PR:** [unslothai/unsloth#15155](https://github.com/unslothai/unsloth/pull/15155) is open. It contains only the feature code, tests and strings, not the DMG or the scripts. This fork, and its test build, exist only until that PR is merged. After that, use the official Unsloth Studio.
 
@@ -24,8 +24,8 @@ Settings → Agents → Desktop apps:
 - **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
 
 ## Download
-Unofficial test build, built from `dc90dd7`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
-**[Unsloth-Studio-claude-codex-desktop-dc90dd7.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-dc90dd7/Unsloth-Studio-claude-codex-desktop-dc90dd7.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-dc90dd7).
+Unofficial test build, built from `9321f1e`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
+**[Unsloth-Studio-claude-codex-desktop-9321f1e.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-9321f1e/Unsloth-Studio-claude-codex-desktop-9321f1e.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-9321f1e).
 
 The DMG holds the app plus the matching Studio backend and two scripts. The desktop app runs the backend installed under `~/.unsloth/studio`; the install script puts this branch's backend there, so Claude Desktop, Codex Desktop and the Agents run settings work.
 
