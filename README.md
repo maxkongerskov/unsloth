@@ -2,7 +2,7 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `9321f1e2a0`, merged with upstream `main`).
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `804b20f97f`, merged with upstream `main`).
 
 **Upstream PR:** [unslothai/unsloth#15155](https://github.com/unslothai/unsloth/pull/15155) is open. It contains only the feature code, tests and strings, not the DMG or the scripts. This fork, and its test build, exist only until that PR is merged. After that, use the official Unsloth Studio.
 
@@ -24,21 +24,18 @@ Settings → Agents → Desktop apps:
 - **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
 
 ## Download
-Unofficial test build, built from `9321f1e`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
-**[Unsloth-Studio-claude-codex-desktop-9321f1e.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-9321f1e/Unsloth-Studio-claude-codex-desktop-9321f1e.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-9321f1e).
+Unofficial test build, built from `804b20f`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
+**[Unsloth-Studio-claude-codex-desktop-804b20f.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-804b20f/Unsloth-Studio-claude-codex-desktop-804b20f.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-804b20f).
 
-The DMG holds the app plus the matching Studio backend and two scripts. The desktop app runs the backend installed under `~/.unsloth/studio`; the install script puts this branch's backend there, so Claude Desktop, Codex Desktop and the Agents run settings work.
+**Self-contained: the app carries its own Studio backend.** The DMG holds only `Unsloth.app` and the Applications shortcut — no scripts, no second install step. The backend wheel this branch was built from sits inside the app, and the app installs or repairs itself onto it at first launch.
 
 ## Install
 1. Quit Unsloth (menu bar → Quit). This also unloads any loaded model.
 2. Optional: keep a copy of your current app, e.g. `ditto /Applications/Unsloth.app ~/Unsloth-app-backups/Unsloth-current.app`.
 3. Open the DMG and drag `Unsloth.app` onto Applications.
-4. Double-click **Install Claude & Codex backend.command**. It:
-   - backs up your current backend environment to `~/Unsloth-app-backups/`;
-   - installs the bundled backend wheel offline, with no dependency changes.
-5. Open Unsloth: Settings → Agents shows Claude Desktop, Codex Desktop and Run settings.
+4. Open Unsloth. On the first launch the app may run a short one-time backend install/repair (a progress screen); when it finishes, Settings → Agents shows Claude Desktop, Codex Desktop and Run settings.
 
-If macOS refuses to open the app or a script, right-click it → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
+The one-time step replaces the Studio backend installed under `~/.unsloth/studio` with this branch's, backing the previous environment up first and rolling back automatically if the install fails. If macOS refuses to open the app, right-click it → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
 
 Nothing else is touched:
 - your models, the Hugging Face cache (including a symlinked drive) and custom model folders;
@@ -46,10 +43,10 @@ Nothing else is touched:
 - llama.cpp.
 
 ## Roll back
-- **Backend:** quit Unsloth and double-click **Restore original backend.command**. It puts the backup back; the Claude/Codex environment is moved aside, not deleted.
+- **Backend:** quit Unsloth; the pre-repair environment is preserved by the installer and backups live in `~/Unsloth-app-backups/`.
 - **App:** put your saved copy back in `/Applications/Unsloth.app`, or reinstall the official app from [unsloth.ai](https://unsloth.ai).
 
-If Studio offers a backend update, accepting it replaces this backend with the official one. Run the install script again afterwards.
+If Studio offers a backend update, accepting it replaces this backend with the official one; with this build installed, the app repairs it back onto the fork backend on its next start.
 
 ## License
 AGPL-3.0 for Unsloth Studio, the same as upstream; see [`studio/LICENSE.AGPL-3.0`](studio/LICENSE.AGPL-3.0) and the upstream [LICENSE](LICENSE). All credit for Unsloth goes to [Unsloth AI](https://github.com/unslothai/unsloth).
