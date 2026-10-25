@@ -2,7 +2,7 @@
 
 > **This is a personal fork of [unslothai/unsloth](https://github.com/unslothai/unsloth), not an official Unsloth AI project.** The upstream README follows below, unchanged.
 
-The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `804b20f97f`, merged with upstream `main`).
+The fork adds desktop-agent integration to **Unsloth Studio Desktop** (macOS, Apple Silicon). The work lives on branch [`claude-desktop-app`](https://github.com/maxkongerskov/unsloth/tree/claude-desktop-app) (head `f14c6511a1`, merged with upstream `main`).
 
 **Upstream PR:** [unslothai/unsloth#15155](https://github.com/unslothai/unsloth/pull/15155) is open. It contains only the feature code, tests and strings, not the DMG or the scripts. This fork, and its test build, exist only until that PR is merged. After that, use the official Unsloth Studio.
 
@@ -24,8 +24,8 @@ Settings → Agents → Desktop apps:
 - **Prompt-cache fix:** Claude Desktop turns reuse llama.cpp's prompt cache.
 
 ## Download
-Unofficial test build, built from `804b20f`. Its feature code is the same as the PR branch. Ad-hoc signed, not notarized:
-**[Unsloth-Studio-claude-codex-desktop-804b20f.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-804b20f/Unsloth-Studio-claude-codex-desktop-804b20f.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-804b20f).
+Unofficial test build, built from `edf70ef` (branch [`dmg-packaging`](https://github.com/maxkongerskov/unsloth/tree/dmg-packaging): the PR branch's feature code plus the fork-only packaging). Ad-hoc signed, not notarized:
+**[Unsloth-Studio-claude-codex-desktop-edf70ef.dmg](https://github.com/maxkongerskov/unsloth/releases/download/studio-claude-codex-desktop-edf70ef/Unsloth-Studio-claude-codex-desktop-edf70ef.dmg)**. See the [release notes](https://github.com/maxkongerskov/unsloth/releases/tag/studio-claude-codex-desktop-edf70ef). It replaces the `804b20f` build, whose app was unsigned and would not open.
 
 **Self-contained: the app carries its own Studio backend.** The DMG holds only `Unsloth.app` and the Applications shortcut — no scripts, no second install step. The backend wheel this branch was built from sits inside the app, and the app installs or repairs itself onto it at first launch.
 
@@ -35,7 +35,14 @@ Unofficial test build, built from `804b20f`. Its feature code is the same as the
 3. Open the DMG and drag `Unsloth.app` onto Applications.
 4. Open Unsloth. On the first launch the app may run a short one-time backend install/repair (a progress screen); when it finishes, Settings → Agents shows Claude Desktop, Codex Desktop and Run settings.
 
-The one-time step replaces the Studio backend installed under `~/.unsloth/studio` with this branch's, backing the previous environment up first and rolling back automatically if the install fails. If macOS refuses to open the app, right-click it → **Open**, or use System Settings → Privacy & Security → **Open Anyway**.
+The one-time step replaces the Studio backend installed under `~/.unsloth/studio` with this branch's, backing the previous environment up first and rolling back automatically if the install fails. 
+
+### First open: "Apple could not verify 'Unsloth'…"
+The app is ad-hoc signed and not notarized, so a downloaded copy shows *"'Unsloth' Not Opened – Apple could not verify 'Unsloth' is free of malware"*. Click **Done**, then either:
+- open **System Settings → Privacy & Security**, click **Open Anyway** next to the Unsloth message and confirm; or
+- run `xattr -dr com.apple.quarantine /Applications/Unsloth.app` in Terminal, then open Unsloth normally.
+
+Right-click → Open no longer bypasses this on current macOS. It is needed once per installed copy.
 
 Nothing else is touched:
 - your models, the Hugging Face cache (including a symlinked drive) and custom model folders;
