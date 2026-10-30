@@ -28,6 +28,7 @@ import {
 import { AgentIcon } from "./agent-command-block";
 import { ClaudeDesktopModels } from "./claude-desktop-models";
 import { claudeDesktopView } from "./claude-desktop-state";
+import { CodexDesktopCard } from "./codex-desktop-card";
 import { pinnedModels } from "./desktop-app-models";
 import { DesktopAppRunSettings } from "./desktop-app-run-settings";
 import { SettingsSection } from "./settings-section";
@@ -49,13 +50,14 @@ export function ClaudeDesktopSection() {
     [],
   );
   return (
-    <div hidden={hiddenApps.length >= 1}>
+    <div hidden={hiddenApps.length >= 2}>
       <SettingsSection
         title={t("settings.agents.desktopApps.title")}
         description={t("settings.agents.desktopApps.description")}
       >
         <div className="mt-2 flex min-w-0 flex-col gap-2">
           <ClaudeDesktopCard onUnavailable={hide} />
+          <CodexDesktopCard onUnavailable={hide} />
           <DesktopAppRunSettings preferred={[]} />
         </div>
       </SettingsSection>
