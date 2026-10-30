@@ -443,6 +443,8 @@ export const BUDGET = {
   // 1,849,311 -> 1,849,948 B transfer against b80df648bf, one machine and build, Node 22, 85 chunks both): the app
   // provider reports a ready renderer through the setting's API module at startup, plus the setting's strings in
   // the eager English catalog and its search rows. Raised by that.
+  // Chat wallpaper prefs, reset and English strings: +6,365 B raw / +3,589 B transfer (Node 24,
+  // 85 -> 89 eager chunks). Renderer, contrast and pixel worker stay lazy.
   // Settings > Agents > Desktop apps (the Claude Desktop and Codex Desktop cards, their model pickers, the shared
   // context window / MTP / keep-loaded run settings, API clients and strings) add +8,089 B raw / +2,495 B transfer
   // to the eager settings and locale chunks (6,935,466 -> 6,943,555 B raw, 2,085,390 -> 2,087,885 B transfer against
@@ -454,8 +456,9 @@ export const BUDGET = {
   // Node 24). Re-measured: the merged size plus a few KB of headroom.
   // Merged onto upstream main c6056ffcbc (budget 1,850,410 B transfer / 5,991,390 B raw): upstream's budget plus
   // the Desktop apps' +2,495 B transfer / +8,089 B raw.
-  transferBytes: 1_852_905,
-  rawBytes: 5_999_479,
+  // Merged onto upstream main 377738b59e (budget 1,853,999 B transfer / 5,997,755 B raw) + Desktop apps' growth.
+  transferBytes: 1_856_494,
+  rawBytes: 6_005_844,
 };
 
 // Chunk count is not budgeted: splitting a page out raises it while lowering bytes.
