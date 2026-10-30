@@ -70,7 +70,7 @@ HEALTH_HEADER = "X-Unsloth-Claude-Gateway"
 # Sent on every request the gateway forwards to Studio's /v1/messages: the Desktop-only prompt
 # handling (dropping Claude's per-request billing line, keeping GLM's replayed reasoning) keys on it,
 # so Claude Code and other Anthropic clients get exactly the upstream behaviour.
-from utils.gateway_client import GATEWAY_CLIENT_HEADER, GATEWAY_CLIENT_VALUE  # noqa: F401
+from .gateway_client import GATEWAY_CLIENT_HEADER, GATEWAY_CLIENT_VALUE  # noqa: F401
 UNSUPPORTED_IMAGE_NOTICE = (
     "[Image omitted by Unsloth because the selected model does not support image recognition.]"
 )
