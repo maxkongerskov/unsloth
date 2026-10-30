@@ -154,14 +154,16 @@ def _chunked_evict_policy(device):
     return _chunked_evict_at(device.type, index)
 
 
-# (BLOCK_SIZE, num_warps, max vocab) for the chunked forward, measured faster on T4 / A100 / B200.
+# (BLOCK_SIZE, num_warps, max vocab) for the chunked forward, measured faster on T4 / A100 / B200 / sm120.
 # A100 at Gemma 262144 was mixed across torch versions, so larger vocabs keep the default.
 # B200: 8192-wide chunks at 4 warps run 1.5-1.9x faster than one 65536-wide chunk at 32 warps
 # (128256 / 151936 / 262144 vocabs, bf16), since each program then needs a fraction of the registers.
+# sm120 (RTX PRO 6000): the same 8192 / 4 config is 1.09-1.41x faster; 16K and 32K chunks tie with it.
 _CHUNKED_FORWARD_CONFIGS = {
     (7, 5): (16384, 8, None),
     (8, 0): (16384, 8, 163840),
     (10, 0): (8192, 4, None),
+    (12, 0): (8192, 4, None),
 }
 
 
@@ -242,7 +244,6 @@ def _chunked_cross_entropy_forward(
     ).to(tl.float32)
 
     # Cohere logit scaling t * x; Gemma 2 softcapping t * tanh(1/t * x).
-    # Do logit scaling for Cohere
     if DO_LOGIT_SCALING:
         logits = LOGIT_SCALE * logits
     if DO_SOFTCAPPING:
@@ -404,8 +405,8 @@ class Fast_CrossEntropyLoss(torch.autograd.Function):
         logits = logits.contiguous()
         labels = labels.to(device).contiguous()
 
-        div, mod = divmod(vocab_size, MAX_FUSED_SIZE)
-        n_chunks: int = div + (mod != 0)
+        # Ceil division, not divmod: Dynamo cannot trace divmod on a symbolic size (dynamic=True).
+        n_chunks: int = (vocab_size + MAX_FUSED_SIZE - 1) // MAX_FUSED_SIZE
         losses = torch.empty(n_rows, dtype = torch.float32, device = device)
 
         DO_SOFTCAPPING: bool = bool(logit_softcapping != 0)
@@ -439,8 +440,7 @@ class Fast_CrossEntropyLoss(torch.autograd.Function):
         else:
             # For large vocabs > 65336 like Gemma 256K
             BLOCK_SIZE, num_warps = _chunked_forward_config(device, vocab_size)
-            div, mod = divmod(vocab_size, BLOCK_SIZE)
-            n_chunks = div + (mod != 0)
+            n_chunks = (vocab_size + BLOCK_SIZE - 1) // BLOCK_SIZE
             logsumexp = torch.empty(
                 (
                     n_rows,
@@ -498,10 +498,7 @@ class Fast_CrossEntropyLoss(torch.autograd.Function):
         dlogits = torch.empty_like(logits)
 
         BLOCK_SIZE: int = 4096
-        div: int
-        mod: int
-        div, mod = divmod(vocab_size, BLOCK_SIZE)
-        n_blocks: int = div + (mod != 0)
+        n_blocks: int = (vocab_size + BLOCK_SIZE - 1) // BLOCK_SIZE
 
         with torch_gpu_device(dlosses.device):
             _cross_entropy_backward[
@@ -579,9 +576,7 @@ if (Version(torch.__version__) < Version("2.4.0")) and not hasattr(
 def patch_loss_functions(torch_compile = True):
     _patch_loss_functions(fast_cross_entropy_loss, torch_compile = torch_compile)
 
-    # Redirect LOSS_MAPPING aliases still pointing at stock ForCausalLMLoss (e.g.
-    # ForConditionalGeneration for Qwen3.5, Csm). unsloth_zoo also does this; remove once the floor
-    # pin passes unslothai/unsloth-zoo#656.
+    # Redirect LOSS_MAPPING aliases still on stock ForCausalLMLoss; drop once zoo floor has #656.
     try:
         import transformers.loss.loss_utils as _lu
         _unsloth_loss = _lu.LOSS_MAPPING.get("ForCausalLM")

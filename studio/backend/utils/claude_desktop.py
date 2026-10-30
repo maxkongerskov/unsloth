@@ -67,6 +67,11 @@ PROFILE_ID = "00000000-0000-4000-8000-00000000051a"
 CONFIG_NAME = "claude_desktop_config.json"
 HEALTH_PATH = "/_unsloth/health"
 HEALTH_HEADER = "X-Unsloth-Claude-Gateway"
+# Sent on every request the gateway forwards to Studio's /v1/messages: the Desktop-only prompt
+# handling (dropping Claude's per-request billing line, keeping GLM's replayed reasoning) keys on it,
+# so Claude Code and other Anthropic clients get exactly the upstream behaviour.
+GATEWAY_CLIENT_HEADER = "X-Unsloth-Client"
+GATEWAY_CLIENT_VALUE = "claude-desktop"
 UNSUPPORTED_IMAGE_NOTICE = (
     "[Image omitted by Unsloth because the selected model does not support image recognition.]"
 )
@@ -1411,6 +1416,7 @@ class _GatewayHandler(BaseHTTPRequestHandler):
             | {"accept-encoding"}
         }
         headers["Authorization"] = f"Bearer {self.server.upstream_key}"
+        headers[GATEWAY_CLIENT_HEADER] = GATEWAY_CLIENT_VALUE
         headers["Content-Length"] = str(len(body))
         headers["Content-Type"] = "application/json"
         return headers
@@ -1568,7 +1574,7 @@ def write_state(path: Path, state: dict) -> None:
     # It holds the Unsloth key the gateway uses, so 0600 from the first byte.
     path.parent.mkdir(parents = True, exist_ok = True, mode = 0o700)
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-    with os.fdopen(fd, "w") as handle:
+    with os.fdopen(fd, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(state, indent = 2) + "\n")
 
 

@@ -1,17 +1,12 @@
 use std::cmp::Ordering;
 
 pub(crate) const DESKTOP_PROTOCOL_VERSION: u16 = 1;
-// 2: the CLI must report studio_install_ok from `studio desktop-capabilities`,
-// so an interrupted install is caught before the backend is spawned. A CLI
-// reporting 1 is Stale and gets repaired, which reinstalls what it missed.
+// 2: the CLI reports studio_install_ok from `studio desktop-capabilities`; a CLI reporting 1 is Stale.
 pub(crate) const DESKTOP_MANAGEABILITY_VERSION: u16 = 2;
-// What a RUNNING backend must report to be adopted and stopped. Not the
-// constant above: studio_install_ok is CLI-side, so gating on 2 would only
-// reject (and so never adopt, or stop) a backend the previous app version
-// spawned. Bump only for a real backend contract change, keep it <= main.py's.
+// What a RUNNING backend must report to be adopted and stopped. studio_install_ok is CLI-side,
+// so this stays separate. Bump only for a backend contract change; keep it <= main.py's.
 pub(crate) const DESKTOP_BACKEND_MANAGEABILITY_VERSION: u16 = 1;
-// Explicit backend package minimum, not the desktop app Cargo version: backend
-// and app releases can diverge. When bumping, verify this package exists on PyPI.
+// Backend package minimum, independent of the app version. Verify the package exists on PyPI.
 pub(super) const MIN_DESKTOP_BACKEND_VERSION: &str = "2026.8.4";
 
 #[derive(Debug, Eq, PartialEq)]
@@ -170,39 +165,9 @@ pub(crate) fn backend_version_stale_reason(version: Option<&str>) -> Option<Stri
     }
 }
 
-// The backend package this build shipped with, stamped by the release workflow
-// from the same pypi_version as the updater manifest. Local and CI builds leave
-// it unset, so the floor above stays their only gate.
+// Stamped by the release workflow; unset in local and CI builds, which use the floor alone.
 pub(crate) fn expected_backend_version() -> &'static str {
     option_env!("UNSLOTH_DESKTOP_BACKEND_VERSION").unwrap_or(MIN_DESKTOP_BACKEND_VERSION)
-}
-
-// A build that ships its own backend wheel in the bundle (the fork's self-contained DMG)
-// can always reach its floor: the bundled installer installs that wheel, not PyPI's. The
-// feed-ceiling marker then lies — it describes what PyPI had, and this build does not
-// install from PyPI — so the caller skips it and repairs with the bundled wheel instead.
-// Official builds carry no such resource, so nothing changes for them. Resolved from the
-// executable (…/Unsloth.app/Contents/MacOS/) so the preflight chain needs no AppHandle.
-pub(crate) fn bundles_backend_wheel() -> bool {
-    let Some(exe) = std::env::current_exe().ok().and_then(|e| e.parent().map(|p| p.to_path_buf()))
-    else {
-        return false;
-    };
-    // …/Contents/MacOS -> …/Contents/Resources
-    let resources = exe.parent().map(|p| p.join("Resources"));
-    let Some(resources) = resources else {
-        return false;
-    };
-    let Ok(entries) = std::fs::read_dir(resources.join("backend")) else {
-        return false;
-    };
-    entries
-        .filter_map(Result::ok)
-        .any(|e| {
-            let name = e.file_name();
-            let name = name.to_string_lossy();
-            name.starts_with("unsloth-") && name.ends_with(".whl")
-        })
 }
 
 pub(super) fn backend_version_outdated_reason(
@@ -219,9 +184,8 @@ pub(super) fn backend_version_outdated_reason(
         .then(|| "desktop_backend_version_outdated".to_string())
 }
 
-// Managed venv only: ~/.unsloth/studio is shared with the CLI installer, so a
-// venv can clear the floor yet predate this app forever, and only repair moves
-// it. Running backends keep the floor alone, so an older one stays adoptable.
+// Managed venv only: the shared venv can clear the floor yet predate this app, and only repair
+// moves it. Running backends keep the floor alone so older ones stay adoptable.
 pub(super) fn managed_backend_version_stale_reason(version: Option<&str>) -> Option<String> {
     backend_version_outdated_reason(version, expected_backend_version())
 }
